@@ -426,8 +426,6 @@ function App() {
             ]
           : [
               "Synchronizing vehicle availability to prevent booking schedule conflicts on the same day.",
-              "Accurate rental cost calculation based on booking duration and vehicle type.",
-              "Learning the importance of integrating user interface, backend logic, and database systems for a seamless booking experience.",
             ],
     },
     project4: {

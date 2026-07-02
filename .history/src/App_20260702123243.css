@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,600,700');
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 html {
@@ -2409,4 +2409,52 @@ body::before {
     .metric-card:hover { transform: none; }
     .modal-custom-link:hover { transform: none; }
     .footer-mini-socials a:hover { transform: none; }
+}
+/* ==========================================================================
+   FIX BORDER GLOW — Matikan di mobile, cegah overflow keluar card
+   ========================================================================== */
+
+/* Desktop: pastikan glow tidak keluar dari card */
+.border-glow-wrapper {
+    contain: layout style;  /* Isolasi rendering agar glow tidak bocor keluar */
+}
+
+.border-glow-layer {
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+/* Mobile & touch: matikan semua efek glow dan transform */
+@media (max-width: 768px) {
+    .border-glow-layer {
+        display: none !important;  /* Sembunyikan layer glow sepenuhnya */
+    }
+
+    .border-glow-wrapper {
+        transform: none !important;
+        overflow: hidden !important;
+        contain: strict;
+    }
+
+    .border-glow-wrapper:hover {
+        transform: none !important;
+        box-shadow:
+            0 1px 0 0 rgba(255, 255, 255, 0.08) inset,
+            0 10px 40px rgba(0, 0, 0, 0.35) !important;
+    }
+
+    .border-glow-wrapper::before {
+        display: none; /* Matikan kilau atas juga */
+    }
+}
+
+/* Touch device: matikan semua hover effect yang bisa muncul saat tap */
+@media (hover: none) and (pointer: coarse) {
+    .border-glow-layer {
+        display: none !important;
+    }
+
+    .border-glow-wrapper:hover {
+        transform: none !important;
+    }
 }

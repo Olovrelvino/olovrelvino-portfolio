@@ -1,20 +1,25 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,600,700');
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden;   /* Kunci utama: cegah scroll horizontal di iOS Safari */
+    width: 100%;
 }
 
 body {
     background: #000000; 
     color: #fff;
     overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;     /* Tidak boleh lebih lebar dari viewport */
+    position: relative;
 }
 
 /* Subtle Glow */
@@ -440,10 +445,12 @@ body::before {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     padding: 50px;
-    border-radius: 16px; /* Mengikuti radius 8-16px modern */
+    border-radius: 16px;
     text-align: center;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
     width: 100%;
+    max-width: 100%;      /* Jaga agar tidak melebihi lebar parent */
+    box-sizing: border-box;
 }
 
 /* Teks Pengantar Utama (Lebih Besar) */
@@ -724,7 +731,8 @@ body::before {
 
 .tech-slider-container {
     width: 100%;
-    overflow: hidden;
+    max-width: 100%;
+    overflow: hidden;     /* Kunci: sembunyikan konten slider yang keluar batas */
     position: relative;
     padding: 20px 0;
     margin-bottom: 60px;
@@ -759,13 +767,14 @@ body::before {
 /* Jalur Slide Bergerak */
 .tech-slide-track {
     display: flex;
-    width: calc(240px * 16); /* Total lebar item dikalikan total duplikasi */
-    animation: scrollInfinite 25s linear infinite; /* Kecepatan rotasi slider */
+    width: max-content;   /* Biarkan konten tentukan lebarnya sendiri */
+    animation: scrollInfinite 25s linear infinite;
 }
 
 /* Item Individual di dalam Loop */
 .slide-item {
-    width: 240px;
+    width: 160px;          /* Lebih kecil agar muat di layar sempit */
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -807,7 +816,7 @@ body::before {
         transform: translateX(0);
     }
     100% {
-        transform: translateX(calc(-240px * 8)); /* Bergeser sejauh satu set penuh */
+        transform: translateX(calc(-160px * 8)); /* Sesuai width baru slide-item */
     }
 }
 
@@ -1016,7 +1025,7 @@ body::before {
 /* GRID */
 .portfolio-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
     gap: 24px;
     width: 100%;
     max-width: 1100px;
@@ -1277,6 +1286,8 @@ body::before {
     align-items: center;
     z-index: 1000;
     padding: 20px;
+    overflow-x: hidden;   /* Modal tidak boleh scroll horizontal */
+    box-sizing: border-box;
 }
 
 .modal-container {
@@ -1557,8 +1568,10 @@ body::before {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 2000; 
-    padding: 30px;
+    z-index: 2000;
+    padding: 20px;
+    overflow: hidden;     /* Cegah preview membuat scroll horizontal */
+    box-sizing: border-box;
 }
 
 .preview-image-box {
@@ -1692,12 +1705,13 @@ body::before {
 }
 
 .contact-display-title {
-    font-size: 3rem;
+    font-size: clamp(1.6rem, 5vw, 3rem);
     font-weight: 700;
     line-height: 1.2;
     color: #ffffff;
     margin: 20px 0;
     letter-spacing: -1.5px;
+    max-width: 100%;
 }
 
 .cyan-glow-text {
@@ -2409,4 +2423,84 @@ body::before {
     .metric-card:hover { transform: none; }
     .modal-custom-link:hover { transform: none; }
     .footer-mini-socials a:hover { transform: none; }
+}
+/* ==========================================================================
+   GLOBAL FIX — Cegah horizontal scroll di semua device mobile
+   Root cause: elemen yang lebih lebar dari viewport
+   ========================================================================== */
+
+/* Semua elemen tidak boleh melebihi lebar viewport */
+*, *::before, *::after {
+    max-width: 100%;
+}
+
+/* Kecualikan elemen yang memang perlu lebar bebas (slider, gambar) */
+img, canvas, video, iframe {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Section wrapper utama */
+.home,
+.about,
+.skills,
+.portfolio-section,
+.contact-section,
+.footer-section {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+    position: relative;
+}
+
+/* Slider tetap overflow hidden dari containernya */
+.tech-slider-container,
+.screenshot-horizontal-scroll {
+    max-width: 100%;
+}
+
+/* Pastikan header tidak overflow */
+.header {
+    max-width: 100vw;
+    box-sizing: border-box;
+}
+
+/* Fix khusus iOS Safari — touch scroll hanya vertikal di body */
+@media (max-width: 768px) {
+    html, body {
+        touch-action: pan-y;   /* Hanya izinkan scroll vertikal */
+        overscroll-behavior-x: none; /* Cegah overscroll horizontal */
+    }
+
+    /* Slide item lebih kecil di mobile */
+    .slide-item {
+        width: 120px;
+    }
+
+    @keyframes scrollInfinite {
+        0%   { transform: translateX(0); }
+        100% { transform: translateX(calc(-120px * 8)); }
+    }
+
+    /* Tech slider tetap overflow hidden */
+    .tech-slide-track {
+        animation: scrollInfinite 20s linear infinite;
+    }
+
+    /* Contact title tidak wrap aneh */
+    .contact-display-title {
+        word-break: keep-all;
+    }
+
+    /* Preview image tidak overflow */
+    .preview-image-box {
+        max-width: 100%;
+        padding: 0 50px; /* beri ruang untuk tombol arrow */
+        box-sizing: border-box;
+    }
+
+    .preview-main-img {
+        max-width: 100%;
+        max-height: 65vh;
+    }
 }

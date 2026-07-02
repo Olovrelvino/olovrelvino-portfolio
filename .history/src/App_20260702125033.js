@@ -415,19 +415,14 @@ function App() {
           : [
               "Real-time vehicle fleet catalog with an automatic rental cost calculator.",
               "User login authentication system and a dedicated admin dashboard to monitor car rental bookings.",
-              "MySQL database-based booking management system to process bookings directly and store transaction data.",
             ],
       challenges:
         language === "ID"
           ? [
               "Sinkronisasi ketersediaan mobil untuk mencegah bentroknya jadwal booking di hari yang sama.",
-              "Kalkulasi biaya sewa yang akurat berdasarkan durasi pemesanan dan jenis kendaraan.",
-              "Belajar pentingnya integrasi antara antarmuka pengguna, logika backend, dan sistem database untuk pengalaman pemesanan yang lancar.",
             ]
           : [
               "Synchronizing vehicle availability to prevent booking schedule conflicts on the same day.",
-              "Accurate rental cost calculation based on booking duration and vehicle type.",
-              "Learning the importance of integrating user interface, backend logic, and database systems for a seamless booking experience.",
             ],
     },
     project4: {
