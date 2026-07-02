@@ -759,7 +759,7 @@ body::before {
 /* Jalur Slide Bergerak */
 .tech-slide-track {
     display: flex;
-    width: calc(240px * 16); /* Total lebar item dikalikan total duplikasi */
+    width: 3840px; /* 240px × 16 items */
     animation: scrollInfinite 25s linear infinite; /* Kecepatan rotasi slider */
 }
 
@@ -807,7 +807,7 @@ body::before {
         transform: translateX(0);
     }
     100% {
-        transform: translateX(calc(-240px * 8)); /* Bergeser sejauh satu set penuh */
+        transform: translateX(-1920px); /* -240px × 8 items */
     }
 }
 
@@ -2076,7 +2076,7 @@ body::before {
    COMPREHENSIVE RESPONSIVE — All Devices
    Breakpoints:
      1440px+ : Large monitor / widescreen
-     1024px  : Laptop (13" - 15")
+     1024px  : Laptop (13"–15")
      768px   : iPad / Tablet landscape
      640px   : iPad mini / small tablet portrait
      480px   : Android HP besar (Galaxy S, Pixel)
@@ -2109,7 +2109,7 @@ body::before {
     .contact-display-title { font-size: 3.6rem; }
 }
 
-/* ── LAPTOP (1024px -1279px) ──────────────────────────────────────── */
+/* ── LAPTOP (1024px–1279px) ──────────────────────────────────────── */
 @media (max-width: 1279px) and (min-width: 1024px) {
     .header { padding: 18px 7%; }
 
@@ -2267,7 +2267,7 @@ body::before {
     .footer-mini-socials { border-left: none; padding-left: 0; justify-content: center; }
 }
 
-/* ── SMALL TABLET / LARGE PHONE (481px - 640px) ───────────────────── */
+/* ── SMALL TABLET / LARGE PHONE (481px–640px) ───────────────────── */
 @media (max-width: 640px) and (min-width: 481px) {
     .portfolio-grid { grid-template-columns: 1fr; }
     .contact-display-title { font-size: 2rem; }
