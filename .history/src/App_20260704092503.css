@@ -9,18 +9,12 @@
 
 html {
     scroll-behavior: smooth;
-    overflow-x: clip;
-    overscroll-behavior-x: none;
-    max-width: 100%;
 }
 
 body {
-    background: #000000;
+    background: #000000; 
     color: #fff;
-    overflow-x: clip;
-    overscroll-behavior-x: none;
-    max-width: 100%;
-    position: relative;
+    overflow-x: hidden;
 }
 
 /* Subtle Glow */
@@ -29,9 +23,9 @@ body::before {
     position: fixed;
     width: 500px;
     height: 500px;
-    background: radial-gradient(circle, rgba(0,238,255,0.05), transparent 70%);
+    background: radial-gradient(circle, rgba(0,238,255,0.05), transparent 70%); 
     top: -100px;
-    right: 0;
+    right: -100px;
     z-index: -1;
 }
 
@@ -730,7 +724,6 @@ body::before {
 
 .tech-slider-container {
     width: 100%;
-    max-width: 100%;
     overflow: hidden;
     position: relative;
     padding: 20px 0;
@@ -738,8 +731,6 @@ body::before {
     background: rgba(255, 255, 255, 0.01);
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    /* Isolasi — pastikan child tidak keluar dari container ini */
-    contain: layout;
 }
 
 /* Efek Blur Fade Kiri dan Kanan agar Logo Terlihat Halus Masuk & Keluar */
@@ -768,8 +759,8 @@ body::before {
 /* Jalur Slide Bergerak */
 .tech-slide-track {
     display: flex;
-    width: max-content;
-    animation: scrollInfinite 25s linear infinite;
+    width: calc(240px * 16); /* Total lebar item dikalikan total duplikasi */
+    animation: scrollInfinite 25s linear infinite; /* Kecepatan rotasi slider */
 }
 
 /* Item Individual di dalam Loop */
@@ -816,7 +807,7 @@ body::before {
         transform: translateX(0);
     }
     100% {
-        transform: translateX(-1920px);
+        transform: translateX(calc(-240px * 8)); /* Bergeser sejauh satu set penuh */
     }
 }
 
@@ -1025,7 +1016,7 @@ body::before {
 /* GRID */
 .portfolio-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 24px;
     width: 100%;
     max-width: 1100px;
@@ -2313,7 +2304,7 @@ body::before {
 }
 
 /* ── IPHONE 14/15 PRO, IPHONE 13/14 (≤390px) ───────────────────── */
-@media (max-width: 390px) {
+@media (max-width: 430px) {
     .home { padding: 100px 4% 50px; }
     .hero-subtitle { font-size: 0.85rem; }
     .btn-primary-white, .btn-secondary-outline { font-size: 0.85rem; padding: 10px 16px; }
@@ -2418,73 +2409,4 @@ body::before {
     .metric-card:hover { transform: none; }
     .modal-custom-link:hover { transform: none; }
     .footer-mini-socials a:hover { transform: none; }
-}
-/* ==========================================================================
-   ULTIMATE HORIZONTAL SCROLL LOCK
-   Menutup semua sumber overflow di iOS Safari & Android Chrome
-   ========================================================================== */
-
-/* Level 1: Root elements */
-html,
-body,
-#root {
-    overflow-x: hidden !important;
-    overscroll-behavior-x: none !important;
-    max-width: 100vw !important;
-    width: 100% !important;
-}
-
-/* Level 2: Semua section */
-.home,
-.about,
-.skills,
-.portfolio-section,
-.contact-section,
-.footer-section {
-    overflow-x: hidden !important;
-    max-width: 100% !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-}
-
-/* Level 3: Isolasi slider agar animasinya tidak menyebabkan overflow */
-.tech-slider-container {
-    overflow: hidden !important;
-    max-width: 100% !important;
-    contain: layout style !important;
-}
-
-/* Level 4: Sembunyikan glow yang keluar viewport di mobile */
-@media (max-width: 1024px) {
-    body::before {
-        display: none !important;
-    }
-}
-
-/* Level 5: Khusus mobile — kunci semua arah kecuali scroll vertikal */
-@media (max-width: 768px) {
-    html {
-        overflow: hidden !important;
-        height: 100% !important;
-    }
-
-    body {
-        overflow-x: hidden !important;
-        overflow-y: auto !important;
-        height: 100% !important;
-        position: relative !important;
-        /* iOS Safari: cegah bounce horizontal */
-        -webkit-overflow-scrolling: touch;
-    }
-
-    #root {
-        overflow-x: hidden !important;
-        width: 100% !important;
-        min-height: 100% !important;
-    }
-
-    /* Slide item lebih kecil di mobile */
-    .slide-item {
-        width: 120px !important;
-    }
 }

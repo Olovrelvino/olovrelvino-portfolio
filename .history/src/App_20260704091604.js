@@ -266,7 +266,6 @@ function App() {
     return () => observer.disconnect();
   }, []);
 
-
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };

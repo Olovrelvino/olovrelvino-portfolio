@@ -9,9 +9,8 @@
 
 html {
     scroll-behavior: smooth;
-    overflow-x: clip;
+    overflow-x: clip;        /* 'clip' lebih kuat dari 'hidden' di iOS Safari */
     overscroll-behavior-x: none;
-    max-width: 100%;
 }
 
 body {
@@ -19,6 +18,7 @@ body {
     color: #fff;
     overflow-x: clip;
     overscroll-behavior-x: none;
+    width: 100%;
     max-width: 100%;
     position: relative;
 }
@@ -27,12 +27,13 @@ body {
 body::before {
     content: '';
     position: fixed;
-    width: 500px;
-    height: 500px;
+    width: 400px;
+    height: 400px;
     background: radial-gradient(circle, rgba(0,238,255,0.05), transparent 70%);
-    top: -100px;
-    right: 0;
+    top: -80px;
+    right: 0;                  /* Tidak keluar dari viewport */
     z-index: -1;
+    pointer-events: none;
 }
 
 /* NAVBAR */
@@ -247,11 +248,13 @@ body::before {
 
 .home-center-content {
     max-width: 800px;
+    width: 100%;               /* Pastikan tidak meluber */
     position: relative;
     z-index: 2;
     display: flex;
     flex-direction: column;
     align-items: center;
+    box-sizing: border-box;
 }
 
 .promo-badge {
@@ -730,7 +733,6 @@ body::before {
 
 .tech-slider-container {
     width: 100%;
-    max-width: 100%;
     overflow: hidden;
     position: relative;
     padding: 20px 0;
@@ -738,8 +740,6 @@ body::before {
     background: rgba(255, 255, 255, 0.01);
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    /* Isolasi — pastikan child tidak keluar dari container ini */
-    contain: layout;
 }
 
 /* Efek Blur Fade Kiri dan Kanan agar Logo Terlihat Halus Masuk & Keluar */
@@ -768,8 +768,8 @@ body::before {
 /* Jalur Slide Bergerak */
 .tech-slide-track {
     display: flex;
-    width: max-content;
-    animation: scrollInfinite 25s linear infinite;
+    width: calc(240px * 16); /* Total lebar item dikalikan total duplikasi */
+    animation: scrollInfinite 25s linear infinite; /* Kecepatan rotasi slider */
 }
 
 /* Item Individual di dalam Loop */
@@ -816,7 +816,7 @@ body::before {
         transform: translateX(0);
     }
     100% {
-        transform: translateX(-1920px);
+        transform: translateX(calc(-240px * 8)); /* Bergeser sejauh satu set penuh */
     }
 }
 
@@ -1025,7 +1025,7 @@ body::before {
 /* GRID */
 .portfolio-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 24px;
     width: 100%;
     max-width: 1100px;
@@ -2420,71 +2420,130 @@ body::before {
     .footer-mini-socials a:hover { transform: none; }
 }
 /* ==========================================================================
-   ULTIMATE HORIZONTAL SCROLL LOCK
-   Menutup semua sumber overflow di iOS Safari & Android Chrome
+   FINAL FIX — Stop horizontal scroll iOS & Android
+   Menggunakan overflow: clip (lebih kuat dari hidden di iOS Safari)
    ========================================================================== */
 
-/* Level 1: Root elements */
-html,
-body,
+/* Semua section utama tidak boleh overflow horizontal */
 #root {
-    overflow-x: hidden !important;
-    overscroll-behavior-x: none !important;
-    max-width: 100vw !important;
-    width: 100% !important;
+    overflow-x: clip;
+    width: 100%;
+    max-width: 100%;
+    position: relative;
 }
 
-/* Level 2: Semua section */
 .home,
 .about,
 .skills,
 .portfolio-section,
 .contact-section,
 .footer-section {
-    overflow-x: hidden !important;
-    max-width: 100% !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
+    overflow-x: clip;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
-/* Level 3: Isolasi slider agar animasinya tidak menyebabkan overflow */
-.tech-slider-container {
-    overflow: hidden !important;
-    max-width: 100% !important;
-    contain: layout style !important;
+/* Semua direct child dari section tidak boleh lebih lebar dari parent */
+.home > *,
+.about > *,
+.skills > *,
+.portfolio-section > *,
+.contact-section > * {
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
-/* Level 4: Sembunyikan glow yang keluar viewport di mobile */
-@media (max-width: 1024px) {
-    body::before {
-        display: none !important;
-    }
-}
-
-/* Level 5: Khusus mobile — kunci semua arah kecuali scroll vertikal */
+/* ── MOBILE SPECIFIC (iOS & Android) ────────────────────────────── */
 @media (max-width: 768px) {
-    html {
-        overflow: hidden !important;
-        height: 100% !important;
-    }
 
-    body {
+    /* Root paling atas */
+    html, body, #root {
         overflow-x: hidden !important;
-        overflow-y: auto !important;
-        height: 100% !important;
-        position: relative !important;
-        /* iOS Safari: cegah bounce horizontal */
-        -webkit-overflow-scrolling: touch;
+        overflow-x: clip !important;   /* Override dengan clip */
+        overscroll-behavior: none;
+        touch-action: pan-y pinch-zoom; /* Hanya izinkan scroll vertikal & zoom */
+        width: 100vw;
+        max-width: 100vw;
     }
 
-    #root {
+    /* Home content tidak terpotong kiri */
+    .home {
+        padding-left: 5% !important;
+        padding-right: 5% !important;
+        text-align: left;
+    }
+
+    .home-center-content {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        align-items: flex-start !important;
+    }
+
+    /* Hero title tidak overflow */
+    .hero-title {
+        font-size: clamp(1.3rem, 6vw, 2rem) !important;
+        white-space: normal !important;       /* Boleh wrap tapi tidak overflow */
+        word-break: break-word;
+        overflow-wrap: break-word;
+        width: 100%;
+    }
+
+    /* Hero subtitle */
+    .hero-subtitle {
+        width: 100%;
+        word-break: break-word;
+        overflow-wrap: break-word;
+    }
+
+    /* Promo badge tidak overflow */
+    .promo-badge {
+        max-width: 100%;
+        flex-wrap: wrap;
+    }
+
+    /* Buttons full width */
+    .hero-action-buttons {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .btn-primary-white,
+    .btn-secondary-outline {
+        width: 100% !important;
+        max-width: 280px;
+        box-sizing: border-box;
+    }
+
+    /* LiquidEther blob tidak keluar dari container */
+    .liquid-bg-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+        left: 0 !important;
+        right: 0 !important;
+    }
+
+    /* Sembunyikan glow body di mobile */
+    body::before {
+        display: none;
+    }
+}
+
+/* ── IPHONE SE & SMALL DEVICES ───────────────────────────────────── */
+@media (max-width: 390px) {
+    html, body, #root {
         overflow-x: hidden !important;
         width: 100% !important;
-        min-height: 100% !important;
     }
 
-    /* Slide item lebih kecil di mobile */
-    .slide-item {
-        width: 120px !important;
+    .hero-title {
+        font-size: clamp(1.2rem, 5.5vw, 1.6rem) !important;
+    }
+
+    .home {
+        padding-left: 4% !important;
+        padding-right: 4% !important;
     }
 }

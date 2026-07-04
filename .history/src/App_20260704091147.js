@@ -266,6 +266,44 @@ function App() {
     return () => observer.disconnect();
   }, []);
 
+  // Blokir scroll horizontal — touch (iOS/Android) & touchpad/wheel (laptop)
+  useEffect(() => {
+    // ── Touch: iOS Safari & Android Chrome ──
+    let startX = 0;
+    let startY = 0;
+
+    const onTouchStart = (e) => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    };
+
+    const onTouchMove = (e) => {
+      const deltaX = Math.abs(e.touches[0].clientX - startX);
+      const deltaY = Math.abs(e.touches[0].clientY - startY);
+      if (deltaX > deltaY) {
+        e.preventDefault();
+      }
+    };
+
+    // Touchpad: laptop trackpad dua jari geser kanan kiri ──
+    const onWheel = (e) => {
+      // deltaX > 0 artinya ada gerakan horizontal dari touchpad
+      // Hanya blokir jika gerakan horizontal lebih dominan dari vertikal
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener("touchstart", onTouchStart, { passive: true });
+    document.addEventListener("touchmove", onTouchMove, { passive: false });
+    document.addEventListener("wheel", onWheel, { passive: false });
+
+    return () => {
+      document.removeEventListener("touchstart", onTouchStart);
+      document.removeEventListener("touchmove", onTouchMove);
+      document.removeEventListener("wheel", onWheel);
+    };
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
